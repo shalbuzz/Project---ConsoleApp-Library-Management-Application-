@@ -9,6 +9,8 @@ namespace Project___ConsoleApp__Library_Management_Application_.Repositories.Int
 {
     public interface IAuthorRepository : IGenericRepository<Author>
     {
-       
+        List<Author> GetAllAuthorsByInclude();
+        Author? GetByIdAuthorsInclude(int id);
+
     }
 }

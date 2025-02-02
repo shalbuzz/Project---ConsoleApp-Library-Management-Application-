@@ -36,6 +36,9 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
                 throw new ArgumentNullException(nameof(loan.LoanItems));
             }
 
+            loan.CreatedAt = DateTime.UtcNow.AddHours(4);
+            loan.UpdatedAt = DateTime.UtcNow.AddHours(4);
+
             loanRepository.Add(loan);
             loanRepository.Commit();
 
@@ -56,7 +59,10 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
                 throw new NotValidException("Id is invalid");
             }
 
-            loanRepository.Remove(data);
+            //loanRepository.Remove(data);
+            data.IsDeleted = true;
+            data.UpdatedAt = DateTime.UtcNow.AddHours(4);
+
             loanRepository.Commit();
         }
 
@@ -133,15 +139,18 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
                 throw new NotValidException("LoanItems is not null");
             }
 
-            data.LoanItems = loan.LoanItems;
-            data.Borrower = loan.Borrower;
-            data.LoanDate = loan.LoanDate;
+            //data.LoanItems = loan.LoanItems;
+            //data.Borrower = loan.Borrower;
+            //data.LoanDate = loan.LoanDate;
             data.ReturnDate = loan.ReturnDate;
-            data.MustReturnDate = loan.MustReturnDate;
-            data.BorrowerId = loan.BorrowerId;
-            data.CreatedAt = loan.CreatedAt;
-            data.UpdatedAt = loan.UpdatedAt;
-            data.IsDeleted = loan.IsDeleted;
+            //data.MustReturnDate = loan.MustReturnDate;
+            //data.BorrowerId = loan.BorrowerId;
+
+            //data.CreatedAt = loan.CreatedAt;
+            //data.UpdatedAt = loan.UpdatedAt;
+            //data.IsDeleted = loan.IsDeleted;
+
+            data.UpdatedAt = DateTime.UtcNow.AddHours(4);
 
 
 

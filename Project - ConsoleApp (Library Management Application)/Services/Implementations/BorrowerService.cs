@@ -36,6 +36,9 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
                 throw new ArgumentNullException("First name is required");
             }
 
+            borrow.CreatedAt = DateTime.UtcNow.AddHours(4);
+            borrow.UpdatedAt = DateTime.UtcNow.AddHours(4);
+
             borrowerRepository.Add(borrow);
             borrowerRepository.Commit();
         }
@@ -57,6 +60,9 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
             {
                 throw new NotValidException("Borrower does not exist");
             }
+
+            data.IsDeleted = true;
+            data.UpdatedAt = DateTime.UtcNow.AddHours(4);
 
             borrowerRepository.Remove(data);
             borrowerRepository.Commit();
@@ -130,10 +136,12 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
 
             data.Name = borrow.Name;
             data.Email = borrow.Email;
-            data.UpdatedAt = borrow.UpdatedAt;
-            data.CreatedAt = borrow.CreatedAt;
-            data.IsDeleted = borrow.IsDeleted;
-            data.Loans = borrow.Loans;
+            //data.UpdatedAt = borrow.UpdatedAt;
+            //data.CreatedAt = borrow.CreatedAt;
+            //data.IsDeleted = borrow.IsDeleted;
+            //data.Loans = borrow.Loans;
+
+            data.UpdatedAt = DateTime.UtcNow.AddHours(4);
 
 
             borrowerRepository.Commit();

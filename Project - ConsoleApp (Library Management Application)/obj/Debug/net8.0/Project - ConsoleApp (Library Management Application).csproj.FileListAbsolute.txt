@@ -129,3 +129,4 @@ C:\Users\user\source\repos\Project - ConsoleApp (Library Management Application)
 C:\Users\user\source\repos\Project - ConsoleApp (Library Management Application)\Project - ConsoleApp (Library Management Application)\obj\Debug\net8.0\Project - ConsoleApp (Library Management Application).pdb
 C:\Users\user\source\repos\Project - ConsoleApp (Library Management Application)\Project - ConsoleApp (Library Management Application)\obj\Debug\net8.0\Project - ConsoleApp (Library Management Application).genruntimeconfig.cache
 C:\Users\user\source\repos\Project - ConsoleApp (Library Management Application)\Project - ConsoleApp (Library Management Application)\obj\Debug\net8.0\ref\Project - ConsoleApp (Library Management Application).dll
+C:\Users\user\source\repos\Project - ConsoleApp (Library Management Application)\Project - ConsoleApp (Library Management Application)\obj\Debug\net8.0\Project - ConsoleApp (Library Management Application).sourcelink.json

@@ -18,12 +18,12 @@ namespace Project___ConsoleApp__Library_Management_Application_.Repositories.Imp
             _context = new AppDbContext();
         }
 
-        public List<Loan> GetAll()
+        public List<Loan> GetAllLoan()
         {
             return _context.Loans.Include(x => x.Borrower).ToList();
         }
 
-        public Loan? GetById(int id)
+        public Loan? GetByIdLoan(int id)
         {
             var data = _context.Loans.Include(x => x.Borrower).FirstOrDefault(x => x.Id == id);
             return data;

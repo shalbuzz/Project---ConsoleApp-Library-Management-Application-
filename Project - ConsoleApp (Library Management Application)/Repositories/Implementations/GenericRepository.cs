@@ -31,12 +31,12 @@ namespace Project___ConsoleApp__Library_Management_Application_.Repositories.Imp
 
             public List<T> GetAll()
             {
-                return _context.Set<T>().ToList();
+                return _context.Set<T>().Where(x=>!x.IsDeleted).ToList();
             }
 
             public T GetById(int id)
             {
-                var data = _context.Set<T>().FirstOrDefault(x => x.Id == id);
+                var data = _context.Set<T>().Where(x => !x.IsDeleted).FirstOrDefault(x => x.Id == id);
                 return data;
             }
 

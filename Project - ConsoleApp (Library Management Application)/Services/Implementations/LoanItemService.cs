@@ -46,6 +46,11 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
                 throw new NotValidException ("LoanItems is not contains loanItem");
             }
 
+            loanItem.CreatedAt = DateTime.UtcNow.AddHours(4);
+            loanItem.UpdatedAt = DateTime.UtcNow.AddHours(4);
+
+
+
             loanItemRepository.Add(loanItem);
             loanItemRepository.Commit();
 
@@ -78,7 +83,10 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
                 throw new NotValidException("LoanItem is not found");
             }
 
-            loanItemRepository.Remove(data);
+            data.IsDeleted = true;
+            data.UpdatedAt = DateTime.UtcNow.AddHours(4);
+
+            //loanItemRepository.Remove(data);
             loanItemRepository.Commit();
 
         }
@@ -160,12 +168,13 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
             {
                 throw new NotValidException("LoanItems is not contains loanItem");
             }
-            data.Loan = loanItem.Loan;
-            data.Book = loanItem.Book;
-            data.UpdatedAt = loanItem.UpdatedAt;
-            data.CreatedAt = loanItem.CreatedAt;
+            //data.Loan = loanItem.Loan;
+            //data.Book = loanItem.Book;
+            //data.UpdatedAt = loanItem.UpdatedAt;
+            //data.CreatedAt = loanItem.CreatedAt;
+            //data.IsDeleted = loanItem.IsDeleted;
             data.BookId = loanItem.BookId;
-            data.IsDeleted = loanItem.IsDeleted;
+            data.UpdatedAt = DateTime.UtcNow.AddHours(4);
 
             loanItemRepository.Commit();
 

@@ -10,9 +10,6 @@ using Project___ConsoleApp__Library_Management_Application_.Repositories.Interfa
 namespace Project___ConsoleApp__Library_Management_Application_.Repositories.Implementations
 {
     public class BorrowerRepository : GenericRepository<Borrower>, IBorrowerRepository
-    {
-
-      
-        
+    {   
     }
 }

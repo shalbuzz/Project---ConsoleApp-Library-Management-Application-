@@ -19,13 +19,13 @@ namespace Project___ConsoleApp__Library_Management_Application_.Repositories.Imp
             _context = new AppDbContext();
         }
 
-        public List<LoanItem> GetAll()
+        public List<LoanItem> GetAllLoanItem()
         {
             return _context.LoanItems.Include(x=>x.Loan).Include(x => x.Book).ToList();
 
         }
 
-        public LoanItem GetById(int id)
+        public LoanItem GetByIdLoanItem(int id)
         {
             var data = _context.LoanItems.Include(x => x.Loan).Include(x => x.Book).FirstOrDefault(x => x.Id == id);
             return data;

@@ -38,6 +38,9 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
                 throw new NotValidException("Published year is invalid");
             }
 
+            book.CreatedAt = DateTime.UtcNow.AddHours(4);
+            book.UpdatedAt = DateTime.UtcNow.AddHours(4);
+
             bookRepository.Add(book);
             bookRepository.Commit();
         }
@@ -56,17 +59,22 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
                 throw new NotValidException("Id is invalid");
             }
 
-            bookRepository.Remove(data);
+            //bookRepository.Remove(data);
+            data.IsDeleted = true;
+            data.UpdatedAt = DateTime.UtcNow.AddHours(4);
             bookRepository.Commit();
         }
 
         public List<Book> GetAll()
         {
             IBookRepository bookRepository = new BookRepository();
+           
             if (bookRepository.GetAll() is null)
             {
                 throw new EntityNotFoundException("Book is not found");
             }
+
+
             return bookRepository.GetAll();
 
 
@@ -126,12 +134,13 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
             data.Title = book.Title;
             data.Description = book.Description;
             data.PublishedYear = book.PublishedYear;
-            data.Authors = book.Authors;
-            data.CreatedAt = book.CreatedAt;
-            data.UpdatedAt = book.UpdatedAt;
-            data.IsDeleted = book.IsDeleted;
+            //data.Authors = book.Authors;
+            //data.CreatedAt = book.CreatedAt;
+            //data.UpdatedAt = book.UpdatedAt;
+            //data.IsDeleted = book.IsDeleted;
             
 
+            data.UpdatedAt = DateTime.UtcNow.AddHours(4);
 
             bookRepository.Commit();
         }

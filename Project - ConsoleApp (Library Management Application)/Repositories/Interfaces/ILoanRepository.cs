@@ -9,5 +9,7 @@ namespace Project___ConsoleApp__Library_Management_Application_.Repositories.Int
 {
     public interface ILoanRepository : IGenericRepository<Loan>
     {
+        List<Loan> GetAllLoan();
+        Loan? GetByIdLoan(int id);
     }
 }

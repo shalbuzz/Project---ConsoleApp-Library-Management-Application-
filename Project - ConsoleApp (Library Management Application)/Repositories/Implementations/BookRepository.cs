@@ -20,12 +20,12 @@ namespace Project___ConsoleApp__Library_Management_Application_.Repositories.Imp
             _context = new AppDbContext();
         }
 
-        public List<Book> GetAll()
+        public List<Book> GetAllByInclude()
         {
             return _context.Books.Include(x=>x.Authors).ToList();
         }
 
-        public Book? GetById(int id)
+        public Book? GetByIdInclude(int id)
         {
             var data = _context.Books.Include(x => x.Authors).FirstOrDefault(x => x.Id == id);
             return data;

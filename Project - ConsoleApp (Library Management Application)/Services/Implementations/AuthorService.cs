@@ -41,6 +41,9 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
                 throw new Exception("Author Books is not initialized");
             }
 
+            author.CreatedAt = DateTime.UtcNow.AddHours(4);
+            author.UpdatedAt = DateTime.UtcNow.AddHours(4);
+
             authorRepository.Add(author);
             authorRepository.Commit();
         }
@@ -59,7 +62,10 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
                 throw new NotValidException("Id is invalid");
             }
 
-            authorRepository.Remove(data);
+            // authorRepository.Remove(data);
+            
+            data.IsDeleted = true;
+            data.UpdatedAt = DateTime.UtcNow.AddHours(4);
             authorRepository.Commit();
         }
 
@@ -123,12 +129,13 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
                 throw new NotValidException("Id is invalid");
             }
 
-            data.UpdatedAt = author.UpdatedAt;
+           
             data.Name = author.Name;
-            data.Books = author.Books;
-            data.CreatedAt = author.CreatedAt;
-            data.IsDeleted = author.IsDeleted;
+            //data.Books = author.Books;
+            //data.CreatedAt = author.CreatedAt;
+            //data.IsDeleted = author.IsDeleted;
             
+            data.UpdatedAt = DateTime.UtcNow.AddHours(4);
 
 
             authorRepository.Commit();
