@@ -16,15 +16,13 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
         public void Create(Author author)
         {
             IAuthorRepository authorRepository = new AuthorRepository();
+
             if(authorRepository is null)
             {
                 throw new Exception("Author Repository is not initialized");
             }
 
-            if(author.Id <= 0)
-            {
-                throw new NotValidException("Id is invalid");
-            }   
+            
 
             if (author is null)
             {
@@ -36,9 +34,9 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
                 throw new Exception("Author Name is not initialized");
             }
 
-            if(author.Books is null)
+            if (string.IsNullOrWhiteSpace(author.Name))
             {
-                throw new Exception("Author Books is not initialized");
+                throw new Exception("Author Name is not initialized");
             }
 
             author.CreatedAt = DateTime.UtcNow.AddHours(4);
@@ -119,10 +117,7 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
                 throw new Exception("Author Name is not initialized");
             }
 
-            if (author.Books is null)
-            {
-                throw new Exception("Author Books is not initialized");
-            }
+          
 
             if (id <= 0)
             {

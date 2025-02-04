@@ -22,12 +22,12 @@ namespace Project___ConsoleApp__Library_Management_Application_.Repositories.Imp
 
         public List<Book> GetAllByInclude()
         {
-            return _context.Books.Include(x=>x.Authors).ToList();
+            return _context.Books.Include(x=>x.Authors).Where(x => !x.IsDeleted).ToList();
         }
 
         public Book? GetByIdInclude(int id)
         {
-            var data = _context.Books.Include(x => x.Authors).FirstOrDefault(x => x.Id == id);
+            var data = _context.Books.Include(x => x.Authors).Where(x => !x.IsDeleted).FirstOrDefault(x => x.Id == id);
             return data;
         }
     }

@@ -13,6 +13,8 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Interfa
         void Update(int id, Book book);
         void Delete(int id);
         Book GetById(int id);
+
+        List<Book> GetAllByInclude();
         List<Book> GetAll();
 
     }

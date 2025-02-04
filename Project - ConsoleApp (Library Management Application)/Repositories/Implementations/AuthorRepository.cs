@@ -20,12 +20,12 @@ namespace Project___ConsoleApp__Library_Management_Application_.Repositories.Imp
         }
         public List<Author> GetAllAuthorsByInclude()
         {
-            return _context.Authors.Include(x => x.Books).ToList();
+            return _context.Authors.Include(x => x.Books).Where(x => !x.IsDeleted).ToList();
         }
 
         public Author? GetByIdAuthorsInclude(int id)
         {
-            var data = _context.Authors.Include(x => x.Books).FirstOrDefault(x => x.Id == id);
+            var data = _context.Authors.Include(x => x.Books).Where(x => !x.IsDeleted).FirstOrDefault(x => x.Id == id);
             return data;
         }
     }

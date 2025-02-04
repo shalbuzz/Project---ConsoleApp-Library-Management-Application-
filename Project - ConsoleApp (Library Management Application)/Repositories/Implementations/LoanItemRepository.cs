@@ -21,13 +21,13 @@ namespace Project___ConsoleApp__Library_Management_Application_.Repositories.Imp
 
         public List<LoanItem> GetAllLoanItem()
         {
-            return _context.LoanItems.Include(x=>x.Loan).Include(x => x.Book).ToList();
+            return _context.LoanItems.Include(x=>x.Loan).Include(x => x.Book).Where(x => !x.IsDeleted).ToList();
 
         }
 
         public LoanItem GetByIdLoanItem(int id)
         {
-            var data = _context.LoanItems.Include(x => x.Loan).Include(x => x.Book).FirstOrDefault(x => x.Id == id);
+            var data = _context.LoanItems.Include(x => x.Loan).Include(x => x.Book).Where(x => !x.IsDeleted).FirstOrDefault(x => x.Id == id);
             return data;
         }
     }

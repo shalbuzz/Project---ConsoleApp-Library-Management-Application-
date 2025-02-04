@@ -80,6 +80,18 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
 
         }
 
+
+        public List<Book> GetAllByInclude()
+        {
+            IBookRepository bookRepository = new BookRepository();
+            if (bookRepository.GetAllByInclude() is null)
+            {
+                throw new EntityNotFoundException("Book is not found");
+            }
+
+            return bookRepository.GetAllByInclude();
+        }
+
         public Book GetById(int id)
         {
             IBookRepository bookRepository = new BookRepository();

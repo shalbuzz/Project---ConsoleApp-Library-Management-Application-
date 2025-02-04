@@ -142,7 +142,7 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
             //data.LoanItems = loan.LoanItems;
             //data.Borrower = loan.Borrower;
             //data.LoanDate = loan.LoanDate;
-            data.ReturnDate = loan.ReturnDate;
+             data.ReturnDate = loan.ReturnDate;
             //data.MustReturnDate = loan.MustReturnDate;
             //data.BorrowerId = loan.BorrowerId;
 

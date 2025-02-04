@@ -20,12 +20,12 @@ namespace Project___ConsoleApp__Library_Management_Application_.Repositories.Imp
 
         public List<Loan> GetAllLoan()
         {
-            return _context.Loans.Include(x => x.Borrower).ToList();
+            return _context.Loans.Include(x => x.Borrower).Where(x => !x.IsDeleted).ToList();
         }
 
         public Loan? GetByIdLoan(int id)
         {
-            var data = _context.Loans.Include(x => x.Borrower).FirstOrDefault(x => x.Id == id);
+            var data = _context.Loans.Include(x => x.Borrower).Where(x => !x.IsDeleted).FirstOrDefault(x => x.Id == id);
             return data;
         }
     }

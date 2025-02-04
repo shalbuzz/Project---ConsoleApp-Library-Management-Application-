@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualBasic;
+﻿using System.Text.RegularExpressions;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualBasic;
 using Project___ConsoleApp__Library_Management_Application_.Exceptions.Common;
 using Project___ConsoleApp__Library_Management_Application_.Models;
 using Project___ConsoleApp__Library_Management_Application_.Services.Implementations;
@@ -17,13 +19,13 @@ namespace Project___ConsoleApp__Library_Management_Application_
             ILoanItemService loanItemService = new LoanItemService();
 
 
-          
+
 
             while (true)
             {
                 try
                 {
-                    Console.Clear();
+                    //Console.Clear();
                     Console.WriteLine("\n📚 Library Management Application");
                     Console.WriteLine("1 - Author actions");
                     Console.WriteLine("2 - Book actions");
@@ -142,14 +144,22 @@ namespace Project___ConsoleApp__Library_Management_Application_
                             try
                             {
                                 Console.Write("Enter book title: ");
-                                string? title = Console.ReadLine()?.Trim();
-                                if (!string.IsNullOrEmpty(title))
+                                string? title = Console.ReadLine();
+
+                                if (string.IsNullOrWhiteSpace(title))
                                 {
-                                    PrintBooks(FilterBooksByTitle(bookService, title));
+                                    Console.WriteLine("Invalid input. Title cannot be empty.");
+                                    break;
+                                }
+
+                                var filteredBooks = FilterBooksByTitle(bookService, title.Trim());
+                                if (filteredBooks == null || filteredBooks.Count == 0)
+                                {
+                                    Console.WriteLine($"No books found with title '{title}'.");
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Invalid input. Title cannot be empty.");
+                                    PrintBooks(filteredBooks);
                                 }
                             }
                             catch (Exception ex)
@@ -162,14 +172,23 @@ namespace Project___ConsoleApp__Library_Management_Application_
                             try
                             {
                                 Console.Write("Enter author name: ");
-                                string? authorName = Console.ReadLine()?.Trim();
-                                if (!string.IsNullOrEmpty(authorName))
+                                string? authorName = Console.ReadLine();
+
+                                if (string.IsNullOrWhiteSpace(authorName))
                                 {
-                                    PrintBooks(FilterBooksByAuthor(bookService, authorName));
+                                    Console.WriteLine("Invalid input. Author name cannot be empty.");
+                                    
+                                }
+
+                                var filteredBooks = FilterBooksByAuthor(bookService, authorName.Trim());
+
+                                if (filteredBooks.Count == 0)
+                                {
+                                    Console.WriteLine($"No books found for author '{authorName}'."); 
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Invalid input. Author name cannot be empty.");
+                                    PrintBooks(filteredBooks);
                                 }
                             }
                             catch (Exception ex)
@@ -177,6 +196,8 @@ namespace Project___ConsoleApp__Library_Management_Application_
                                 Console.WriteLine($"Error while filtering books by author: {ex.Message}");
                             }
                             break;
+
+
 
                         case "0":
                             Console.WriteLine("Exiting the application...");
@@ -196,7 +217,7 @@ namespace Project___ConsoleApp__Library_Management_Application_
         }
 
 
-    
+
 
 
 
@@ -208,7 +229,7 @@ namespace Project___ConsoleApp__Library_Management_Application_
             {
                 try
                 {
-                    Console.Clear();
+                    //Console.Clear();
                     Console.WriteLine("\nAuthor Actions:");
                     Console.WriteLine("1 - List all authors");
                     Console.WriteLine("2 - Create an author");
@@ -250,17 +271,28 @@ namespace Project___ConsoleApp__Library_Management_Application_
                                 Console.Write("Enter author name: ");
                                 string? name = Console.ReadLine()?.Trim();
 
-                                if (string.IsNullOrEmpty(name))
+                                if (string.IsNullOrEmpty(name) || !Regex.IsMatch(name, @"^[A-Za-zА-Яа-я\s]{3,}$"))
                                 {
-                                    throw new ArgumentException("Author name cannot be empty.");
+                                    throw new ArgumentException("Invalid name! The name must contain only letters and spaces (minimum 3 characters). No digits or special symbols allowed.");
                                 }
+
+                                var words = name.Split(' ');
+                                for (int i = 0; i < words.Length; i++)
+                                {
+                                    if (!string.IsNullOrEmpty(words[i]))
+                                    {
+                                        words[i] = char.ToUpper(words[i][0]) + words[i].Substring(1).ToLower();
+                                    }
+                                }
+                                name = string.Join(" ", words);
 
                                 authorService.Create(new Author
                                 {
                                     Name = name,
                                     IsDeleted = false,
+                                    CreatedAt = DateTime.UtcNow.AddHours(4),
                                     UpdatedAt = DateTime.UtcNow.AddHours(4),
-                                    CreatedAt = DateTime.UtcNow.AddHours(4)
+                                   
                                 });
 
                                 Console.WriteLine("Author created successfully.");
@@ -287,10 +319,21 @@ namespace Project___ConsoleApp__Library_Management_Application_
                                 Console.Write("New name: ");
                                 string? newName = Console.ReadLine()?.Trim();
 
-                                if (string.IsNullOrEmpty(newName))
+                                if (string.IsNullOrEmpty(newName) || !Regex.IsMatch(newName, @"^[A-Za-zА-Яа-я\s]{3,}$"))
                                 {
-                                    throw new ArgumentException("New name cannot be empty.");
+                                    throw new ArgumentException("Invalid name! The name must contain only letters and spaces (minimum 3 characters). No digits or special symbols allowed.");
                                 }
+
+
+                                var words = newName.Split(' ');
+                                for (int i = 0; i < words.Length; i++)
+                                {
+                                    if (!string.IsNullOrEmpty(words[i]))
+                                    {
+                                        words[i] = char.ToUpper(words[i][0]) + words[i].Substring(1).ToLower();
+                                    }
+                                }
+                                newName = string.Join(" ", words);
 
                                 authorService.Update(id, new Author
                                 {
@@ -353,7 +396,7 @@ namespace Project___ConsoleApp__Library_Management_Application_
             }
         }
 
-    
+
 
 
         static void BookMenu(IBookService bookService)
@@ -363,7 +406,7 @@ namespace Project___ConsoleApp__Library_Management_Application_
             {
                 try
                 {
-                    Console.Clear();
+                    //Console.Clear();
                     Console.WriteLine("\nBooks Actions:");
                     Console.WriteLine("1 - Butun booklarin siyahisi");
                     Console.WriteLine("2 - Book yaratmaq");
@@ -405,19 +448,75 @@ namespace Project___ConsoleApp__Library_Management_Application_
                                 Console.Write("Enter book title: ");
                                 string? title = Console.ReadLine()?.Trim();
 
+                                if (string.IsNullOrEmpty(title) || !Regex.IsMatch(title, @"^[A-Za-zА-Яа-я\s]{3,}$"))
+                                {
+                                    throw new ArgumentException("Invalid name! The name must contain only letters and spaces (minimum 3 characters). No digits or special symbols allowed.");
+                                }
+
+                                var words = title.Split(' ');
+                                for (int i = 0; i < words.Length; i++)
+                                {
+                                    if (!string.IsNullOrEmpty(words[i]))
+                                    {
+                                        words[i] = char.ToUpper(words[i][0]) + words[i].Substring(1).ToLower();
+                                    }
+                                }
+                                title = string.Join(" ", words);
+
+                                //if (!char.IsUpper(title[0]))
+                                //{
+                                //    throw new ArgumentException("The title must start with an uppercase letter.");
+                                //}
+
                                 Console.Write("Enter book description: ");
                                 string? description = Console.ReadLine()?.Trim();
 
-                                Console.Write("Enter published year: ");
-                                if (!int.TryParse(Console.ReadLine(), out int publishedYear))
+                                var word = description.Split(' ');
+
+                                for (int i = 0; i < word.Length; i++)
                                 {
-                                    throw new FormatException("Invalid year format.");
+                                    if (!string.IsNullOrEmpty(word[i]))
+                                    {
+                                        word[i] = char.ToUpper(word[i][0]) + word[i].Substring(1).ToLower();
+                                    }
+                                }
+                                description = string.Join(" ", word);
+
+
+                                if (string.IsNullOrEmpty(description) || !Regex.IsMatch(description, @"^[A-Za-zА-Яа-я][A-Za-zА-Яа-я0-9\s]{9,}$"))
+                                {
+                                    throw new ArgumentException("Invalid description! The description must start with a letter, have at least 10 characters, and contain only letters, numbers, and spaces (no special symbols).");
                                 }
 
-                                if (string.IsNullOrEmpty(title) || string.IsNullOrEmpty(description))
+
+
+                                //Console.Write("Enter published year: ");
+                                //if (!int.TryParse(Console.ReadLine(), out int publishedYear))
+                                //{
+                                //    throw new FormatException("Invalid year format.");
+                                //}
+
+
+
+                                Console.Write("Enter published year: ");
+                                string? inputYear = Console.ReadLine()?.Trim();
+
+                                // Проверяем, что год состоит из 4 цифр
+                                if (string.IsNullOrEmpty(inputYear) || inputYear.Length != 4 || !int.TryParse(inputYear, out int publishedYear))
                                 {
-                                    throw new ArgumentException("Title and description cannot be empty.");
+                                    throw new FormatException("Invalid year format. The year must be a 4-digit number.");
                                 }
+
+                                // Получаем текущий год
+                                int currentYear = DateTime.Now.Year;
+
+                                // Проверяем, что год не превышает текущий
+                                if (publishedYear > currentYear)
+                                {
+                                    throw new ArgumentException($"The published year cannot be greater than the current year ({currentYear}).");
+                                }
+
+                                Console.WriteLine("Year is valid.");
 
                                 bookService.Create(new Book
                                 {
@@ -425,8 +524,9 @@ namespace Project___ConsoleApp__Library_Management_Application_
                                     Description = description,
                                     PublishedYear = publishedYear,
                                     IsDeleted = false,
+                                    CreatedAt = DateTime.UtcNow.AddHours(4),
                                     UpdatedAt = DateTime.UtcNow.AddHours(4),
-                                    CreatedAt = DateTime.UtcNow.AddHours(4)
+                                    
                                 });
 
                                 Console.WriteLine("Book created successfully.");
@@ -457,16 +557,66 @@ namespace Project___ConsoleApp__Library_Management_Application_
                                 Console.Write("New title: ");
                                 string? newTitle = Console.ReadLine()?.Trim();
 
+                                if (string.IsNullOrEmpty(newTitle) || !Regex.IsMatch(newTitle, @"^[A-Za-zА-Яа-я]+(?: [A-Za-zА-Яа-я]+)*$"))
+                                {
+                                    throw new ArgumentException("Invalid title! The title must contain only letters (minimum 3 characters per word) and no digits or special symbols.");
+                                }
+
+
+                                var words = newTitle.Split(' ');
+                                for (int i = 0; i < words.Length; i++)
+                                {
+                                    if (!string.IsNullOrEmpty(words[i]))
+                                    {
+                                        words[i] = char.ToUpper(words[i][0]) + words[i].Substring(1).ToLower();
+                                    }
+                                }
+                                newTitle = string.Join(" ", words);
+
                                 Console.Write("New description: ");
                                 string? newDescription = Console.ReadLine()?.Trim();
 
-                                Console.Write("New published year: ");
-                                if (!int.TryParse(Console.ReadLine(), out int newPublishedYear))
+                                if (string.IsNullOrEmpty(newDescription) || !Regex.IsMatch(newDescription, @"^[A-Za-zА-Яа-я0-9]+(?: [A-Za-zА-Яа-я0-9]+)*$") || newDescription.Length < 10)
                                 {
-                                    throw new FormatException("Invalid year format.");
+                                    throw new ArgumentException("Invalid newDescription! The description must contain only letters and numbers (minimum 10 characters) and no special symbols.");
                                 }
 
-                                if (string.IsNullOrEmpty(newTitle) || string.IsNullOrEmpty(newDescription))
+
+                                var word = newDescription.Split(' ');
+                                for (int i = 0; i < word.Length; i++)
+                                {
+                                    if (!string.IsNullOrEmpty(word[i]))
+                                    {
+                                        word[i] = char.ToUpper(word[i][0]) + word[i].Substring(1).ToLower();
+                                    }
+                                }
+                                newDescription = string.Join(" ", word);
+
+                                Console.Write("New published year: ");
+                                string? inputYear = Console.ReadLine()?.Trim();
+
+                                // Проверка: год должен быть числом из 4 цифр
+                                if (!Regex.IsMatch(inputYear, @"^\d{4}$") || !int.TryParse(inputYear, out int newPublishedYear))
+                                {
+                                    throw new FormatException("Invalid year format. The year must be a 4-digit number.");
+                                }
+
+                                // Получаем текущий год
+                                int currentYear = DateTime.Now.Year;
+
+                                // Устанавливаем разумные границы для года (например, не раньше 1500)
+                                if (newPublishedYear < 1500 || newPublishedYear > currentYear)
+                                {
+                                    throw new ArgumentException($"The published year must be between 1500 and {currentYear}.");
+                                }
+
+                                Console.WriteLine("Year is valid.");
+
+
+
+
+
+                                if (string.IsNullOrWhiteSpace(newTitle) || string.IsNullOrWhiteSpace(newDescription))
                                 {
                                     throw new ArgumentException("Title and description cannot be empty.");
                                 }
@@ -544,7 +694,7 @@ namespace Project___ConsoleApp__Library_Management_Application_
             {
                 try
                 {
-                    Console.Clear();
+                    //Console.Clear();
                     Console.WriteLine("\nBorrower Actions:");
                     Console.WriteLine("1 - List all borrowers");
                     Console.WriteLine("2 - Create a borrower");
@@ -586,10 +736,35 @@ namespace Project___ConsoleApp__Library_Management_Application_
                                 Console.Write("Enter borrower name: ");
                                 string? name = Console.ReadLine()?.Trim();
 
+
+
+                                if (string.IsNullOrWhiteSpace(name) || !Regex.IsMatch(name, @"^[A-Za-zА-Яа-я\s.'-]{3,}$"))
+                                {
+                                    throw new ArgumentException("Invalid name! The name must contain only letters, spaces, dots (.), apostrophes ('), and hyphens (-), with at least 3 characters.");
+                                }
+
+
+                                var word = name.Split(' ');
+                                for (int i = 0; i < word.Length; i++)
+                                {
+                                    if (!string.IsNullOrEmpty(word[i]))
+                                    {
+                                        word[i] = char.ToUpper(word[i][0]) + word[i].Substring(1).ToLower();
+                                    }
+                                }
+                                name = string.Join(" ", word);
+
+
                                 Console.Write("Enter borrower email: ");
                                 string? email = Console.ReadLine()?.Trim();
 
-                                if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(email))
+                                if (string.IsNullOrEmpty(email) || !Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"))
+                                {
+                                    throw new ArgumentException("Invalid email! The email must be in a valid format (e.g., example@mail.com).");
+                                }
+
+
+                                if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(email))
                                 {
                                     throw new ArgumentException("Name and email cannot be empty.");
                                 }
@@ -624,12 +799,36 @@ namespace Project___ConsoleApp__Library_Management_Application_
                                 Console.Write("New name: ");
                                 string? newName = Console.ReadLine()?.Trim();
 
+                                if (string.IsNullOrWhiteSpace(newName) || !Regex.IsMatch(newName, @"^[A-Za-zА-Яа-я\s.'-]{3,}$"))
+                                {
+                                    throw new ArgumentException("Invalid name! The name must contain only letters, spaces, dots (.), apostrophes ('), and hyphens (-), with at least 3 characters.");
+                                }
+
+
+                                var word = newName.Split(' ');
+                                for (int i = 0; i < word.Length; i++)
+                                {
+                                    if (!string.IsNullOrEmpty(word[i]))
+                                    {
+                                        word[i] = char.ToUpper(word[i][0]) + word[i].Substring(1).ToLower();
+                                    }
+                                }
+                                newName = string.Join(" ", word);
+
+
+
                                 Console.Write("New email: ");
                                 string? newEmail = Console.ReadLine()?.Trim();
 
-                                if (string.IsNullOrEmpty(newName) || string.IsNullOrEmpty(newEmail))
+                                if (string.IsNullOrEmpty(newEmail) || !Regex.IsMatch(newEmail, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"))
                                 {
-                                    throw new ArgumentException("Name and email cannot be empty.");
+                                    throw new ArgumentException("Invalid email! The email must be in a valid format (e.g., example@mail.com).");
+                                }
+
+
+                                if (string.IsNullOrWhiteSpace(newName) || string.IsNullOrWhiteSpace(newEmail))
+                                {
+                                    throw new ArgumentException("Title and description cannot be empty.");
                                 }
 
                                 borrowerService.Update(id, new Borrower
@@ -700,106 +899,106 @@ namespace Project___ConsoleApp__Library_Management_Application_
             {
                 if (string.IsNullOrWhiteSpace(title))
                 {
-                    Console.WriteLine("Error: The title cannot be null or empty.");
-                    return new List<Book>(); // Возвращаем пустой список
+                    throw new ArgumentNullException(nameof(title), "Title cannot be null or empty.");
                 }
 
                 var books = bookService.GetAll();
-                if (books == null)
+                if (books == null || books.Count == 0)
                 {
-                    Console.WriteLine("Error: Unable to retrieve book list. The data source returned null.");
+                    Console.WriteLine("No books found in the database.");
                     return new List<Book>();
                 }
 
-                return books
-                    .Where(b => b.Title != null && b.Title.Contains(title, StringComparison.OrdinalIgnoreCase))
+                var filteredBooks = books
+                    .Where(b => !string.IsNullOrEmpty(b.Title) &&
+                                b.Title.Contains(title, StringComparison.OrdinalIgnoreCase))
                     .ToList();
-            }
 
-            catch (ArgumentNullException ex)
-            {
-                Console.WriteLine($"Error: The title parameter cannot be null. {ex.Message}");
-                return new List<Book>(); // Возвращаем пустой список при ошибке
-            }
-
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An unexpected error occurred while filtering books by title: {ex.Message}");
-                return new List<Book>(); // Возвращаем пустой список при ошибке
-            }
-        }
-
-
-        static List<Book> FilterBooksByAuthor(IBookService bookService, string authorName)
-          {
-           
-            try
-            {
-                if (string.IsNullOrWhiteSpace(authorName))
+                if (filteredBooks.Count == 0)
                 {
-                    Console.WriteLine("Error: The title cannot be null or empty.");
-                    return new List<Book>(); // Возвращаем пустой список
+                    Console.WriteLine($"No books found with title containing '{title}'.");
                 }
 
-                return bookService.GetAll()
-                    .Where(b => b.Authors.Any(a => a.Name.Contains(authorName, StringComparison.OrdinalIgnoreCase)))
-                    .ToList();
-            }
-            catch (ArgumentNullException ex)
-            {
-                Console.WriteLine($"Error: The title parameter cannot be null. {ex.Message}");
-                return new List<Book>(); // Возвращаем пустой список при ошибке
+                return filteredBooks;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred while filtering books by title: {ex.Message}");
-                return new List<Book>(); // Возвращаем пустой список при ошибке
+                Console.WriteLine($"Error while filtering books by title: {ex.Message}");
+                return new List<Book>();
             }
-
         }
 
+
+
+       static List<Book> FilterBooksByAuthor(IBookService bookService, string authorName)
+{
+    try
+    {
+        if (string.IsNullOrWhiteSpace(authorName))
+        {
+            throw new ArgumentNullException(nameof(authorName), "Author name cannot be null or empty.");
+        }
+
+        // Получаем все книги с включенными авторами
+        var books = bookService.GetAllByInclude(); // Получаем все книги с авторами
+
+        if (books == null || books.Count == 0)
+        {
+            Console.WriteLine("⚠ No books found in the database.");
+            return new List<Book>();
+        }
+
+        // Фильтруем книги по автору
+        var filteredBooks = books
+            .Where(b => b.Authors != null && 
+                       b.Authors.Any(a => a.Name.Contains(authorName, StringComparison.OrdinalIgnoreCase)))
+            .ToList();
+
+        if (filteredBooks.Count == 0)
+        {
+            Console.WriteLine($"🚫 No books found for author '{authorName}'.");
+        }
+
+        return filteredBooks;
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Error while filtering books by author: {ex.Message}");
+        return new List<Book>();
+    }
+}
 
 
         static void PrintBooks(List<Book> books)
         {
             try
             {
-                if (books.Count == 0)
+                if (books == null || books.Count == 0)
                 {
                     Console.WriteLine("No books found.");
-                    return;
-                }
-
-                if (books.Any(b => b == null))
-                {
-                    Console.WriteLine("Error: One or more book entries are null and cannot be printed.");
                     return;
                 }
 
                 Console.WriteLine("\nFiltered Books:");
                 foreach (var book in books)
                 {
-                    if (book == null) // Проверка на случай, если книга окажется null
+                    if (book == null)
                     {
                         Console.WriteLine("A book entry is null and cannot be printed.");
                         continue;
                     }
+
                     Console.WriteLine($"- {book.Title} (Published: {book.PublishedYear})");
                 }
             }
-            catch (NullReferenceException nullEx)
-            {
-                Console.WriteLine($"A null reference error occurred: {nullEx.Message}");
-            }
-            catch (ArgumentException argEx)
-            {
-                Console.WriteLine($"Argument error: {argEx.Message}");
-            }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred while printing books: {ex.Message}");
+                Console.WriteLine($"Error while printing books: {ex.Message}");
             }
         }
+
+
+
 
 
         static void ReturnBook(ILoanService loanService, int borrowerId)
@@ -842,6 +1041,7 @@ namespace Project___ConsoleApp__Library_Management_Application_
             try
             {
                 var loans = loanService.GetAll();
+
 
                 if (loans == null || !loans.Any())
                 {
