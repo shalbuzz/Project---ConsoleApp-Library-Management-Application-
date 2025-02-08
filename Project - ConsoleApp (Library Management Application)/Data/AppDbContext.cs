@@ -16,7 +16,8 @@ namespace Project___ConsoleApp__Library_Management_Application_.Data
         public DbSet<Loan> Loans { get; set; }
 
         public DbSet<LoanItem> LoanItems { get; set; }
-        
+
+       
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=BOMZZZARA;Database=ProjectEFCORE;Trusted_Connection=True; TrustServerCertificate = True");

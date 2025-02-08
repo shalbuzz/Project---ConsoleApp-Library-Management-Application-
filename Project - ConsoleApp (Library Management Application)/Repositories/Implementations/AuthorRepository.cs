@@ -28,5 +28,31 @@ namespace Project___ConsoleApp__Library_Management_Application_.Repositories.Imp
             var data = _context.Authors.Include(x => x.Books).Where(x => !x.IsDeleted).FirstOrDefault(x => x.Id == id);
             return data;
         }
+
+        public Author? GetByIdInclude(int id)
+        {
+            var data = _context.Authors.Include(x => x.Books).Where(x => !x.IsDeleted).FirstOrDefault(x => x.Id == id);
+            return data;
+        }
+
+        public void DeleteById(int id)
+        {
+            var author = _context.Authors.Include(b => b.Books).FirstOrDefault(b => b.Id == id);
+
+            if (author == null)
+            {
+                throw new Exception("Book not found.");
+            }
+
+            // Удаляем связи книги с авторами в промежуточной таблице
+            author.Books.Clear();
+
+            // Помечаем книгу как удаленную
+            author.IsDeleted = true;
+            author.UpdatedAt = DateTime.UtcNow.AddHours(4);
+
+            _context.SaveChanges();
+        }
+
     }
 }

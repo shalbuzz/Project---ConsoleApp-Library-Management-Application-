@@ -9,5 +9,10 @@ namespace Project___ConsoleApp__Library_Management_Application_.Repositories.Int
 {
     public interface IBorrowerRepository : IGenericRepository<Borrower>
     {
+        Borrower? GetBorrowerWithLoans(int id);
+
+        void MarkAsDeleted(Borrower borrower);
+
+
     }
 }

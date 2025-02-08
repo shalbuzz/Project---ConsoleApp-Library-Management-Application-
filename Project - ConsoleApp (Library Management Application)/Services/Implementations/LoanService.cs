@@ -18,7 +18,7 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
 
             ILoanRepository loanRepository = new LoanRepository();
 
-            if(loanRepository is null)
+            if (loanRepository is null)
             {
                 throw new EntityNotFoundException(nameof(loanRepository));
             }
@@ -59,7 +59,6 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
                 throw new NotValidException("Id is invalid");
             }
 
-            //loanRepository.Remove(data);
             data.IsDeleted = true;
             data.UpdatedAt = DateTime.UtcNow.AddHours(4);
 
@@ -84,7 +83,46 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
             return loanRepository.GetAll();
         }
 
-        public Loan GetById(int id)
+        public Loan GetByIdLoan(int id)
+        {
+            ILoanRepository loanRepository = new LoanRepository();
+            if (loanRepository.GetByIdLoan(id) is null)
+            {
+                throw new EntityNotFoundException("Loan is not found");
+            }
+
+            if (id <= 0)
+            {
+                throw new NotValidException("Id is invalid");
+            }
+
+            if (loanRepository.GetByIdLoan(id) == null)
+            {
+                throw new NotValidException("Loan is not found");
+            }
+
+
+           return loanRepository.GetByIdLoan(id);
+        }
+    
+        public List<Loan> GetAllLoan()
+        {
+            ILoanRepository loanRepository = new LoanRepository();
+            if (loanRepository.GetAll() is null)
+            {
+                throw new EntityNotFoundException(nameof(Loan));
+            }
+
+            if (loanRepository.GetAll().Count == 0)
+            {
+                throw new EntityNotFoundException(nameof(Loan));
+            }
+
+
+            return loanRepository.GetAllLoan();
+        }
+
+            public Loan GetById(int id)
         {
             ILoanRepository loanRepository = new LoanRepository();
             if (loanRepository.GetById(id) is null)
@@ -142,14 +180,13 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
             //data.LoanItems = loan.LoanItems;
             //data.Borrower = loan.Borrower;
             //data.LoanDate = loan.LoanDate;
-             data.ReturnDate = loan.ReturnDate;
             //data.MustReturnDate = loan.MustReturnDate;
             //data.BorrowerId = loan.BorrowerId;
-
             //data.CreatedAt = loan.CreatedAt;
             //data.UpdatedAt = loan.UpdatedAt;
             //data.IsDeleted = loan.IsDeleted;
 
+            data.ReturnDate = loan.ReturnDate;
             data.UpdatedAt = DateTime.UtcNow.AddHours(4);
 
 

@@ -11,5 +11,9 @@ namespace Project___ConsoleApp__Library_Management_Application_.Repositories.Int
     {
         List<LoanItem> GetAllLoanItem();
         LoanItem? GetByIdLoanItem(int id);
+
+        List<LoanItem> GetLoanItemsByBorrower(int borrowerId);
+
+        void MarkAsDeleted(LoanItem loanItem);
     }
 }

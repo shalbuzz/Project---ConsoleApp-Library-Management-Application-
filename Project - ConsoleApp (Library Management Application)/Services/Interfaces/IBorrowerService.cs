@@ -14,6 +14,7 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Interfa
         void Delete(int id);
         Borrower GetById(int id);
         List<Borrower> GetAll();
+        void SoftDeleteBorrower(int borrowerId);
 
     }
 }

@@ -9,9 +9,11 @@ namespace Project___ConsoleApp__Library_Management_Application_.Repositories.Int
 {
     public interface IBookRepository : IGenericRepository<Book>
     {
-
         List<Book> GetAllByInclude();
         Book? GetByIdInclude(int id);
+        void CreateWithAuthorId(int authorId, Book entity);
+        void DeleteById(int id);
+        List<Book> GetAllByTitle();
 
     }
 }

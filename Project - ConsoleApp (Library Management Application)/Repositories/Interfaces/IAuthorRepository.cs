@@ -11,6 +11,8 @@ namespace Project___ConsoleApp__Library_Management_Application_.Repositories.Int
     {
         List<Author> GetAllAuthorsByInclude();
         Author? GetByIdAuthorsInclude(int id);
+        Author? GetByIdInclude(int id);
+        void DeleteById(int id);
 
     }
 }

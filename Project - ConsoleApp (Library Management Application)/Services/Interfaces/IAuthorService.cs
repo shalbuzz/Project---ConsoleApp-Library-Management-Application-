@@ -14,5 +14,9 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Interfa
         void Delete(int id);
         Author GetById(int id);
         List<Author> GetAll();
+        Author? GetByIdAuthorsInclude(int id);
+        List<Author> GetAllAuthorsByInclude();
+        void DeleteById(int id);
+        Author GetByIdInclude(int id);
     }
 }

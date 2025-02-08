@@ -30,5 +30,30 @@ namespace Project___ConsoleApp__Library_Management_Application_.Repositories.Imp
             var data = _context.LoanItems.Include(x => x.Loan).Include(x => x.Book).Where(x => !x.IsDeleted).FirstOrDefault(x => x.Id == id);
             return data;
         }
+
+        public List<LoanItem> GetLoanItemsByBorrower(int borrowerId)
+        {
+            try
+            {
+                var loanItems = _context.LoanItems
+                    .Where(li => li.Loan.BorrowerId == borrowerId && !li.IsDeleted)
+                    .ToList(); 
+
+                return loanItems;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                throw;
+            }
+        }
+
+        public void MarkAsDeleted(LoanItem loanItem)
+        {
+            loanItem.IsDeleted = true;
+            _context.Entry(loanItem).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
+
     }
 }

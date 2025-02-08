@@ -11,7 +11,7 @@ using Project___ConsoleApp__Library_Management_Application_.Services.Interfaces;
 
 namespace Project___ConsoleApp__Library_Management_Application_.Services.Implementations
 {
-    public class AuthorService : IAuthorService
+    public class AuthorService : IAuthorService 
     {
         public void Create(Author author)
         {
@@ -23,7 +23,6 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
             }
 
             
-
             if (author is null)
             {
                 throw new Exception("Author is not initialized");
@@ -60,8 +59,7 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
                 throw new NotValidException("Id is invalid");
             }
 
-            // authorRepository.Remove(data);
-            
+           
             data.IsDeleted = true;
             data.UpdatedAt = DateTime.UtcNow.AddHours(4);
             authorRepository.Commit();
@@ -83,6 +81,38 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
             return authorRepository.GetAll();
         }
 
+
+        public Author GetByIdAuthorsInclude(int id)
+        {
+            IAuthorRepository authorRepository = new AuthorRepository();
+            if (authorRepository is null)
+            {
+                throw new Exception("Author Repository is not initialized");
+            }
+
+            if (authorRepository.GetAll() is null)
+            {
+                throw new EntityNotFoundException("Author is not found");
+            }
+            return authorRepository.GetByIdAuthorsInclude(id);
+        }
+
+        public List<Author> GetAllAuthorsByInclude()
+        {
+            IAuthorRepository authorRepository = new AuthorRepository();
+            if (authorRepository is null)
+            {
+                throw new Exception("Author Repository is not initialized");
+            }
+
+            if (authorRepository.GetAllAuthorsByInclude() is null)
+            {
+                throw new EntityNotFoundException("Author is not found");
+            }
+
+            return authorRepository.GetAllAuthorsByInclude();
+        }
+
         public Author GetById(int id)
         {
             IAuthorRepository authorRepository = new AuthorRepository();
@@ -96,6 +126,37 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
                 throw new EntityNotFoundException("Author is not found");
             }
           return authorRepository.GetById(id);
+        }
+
+        public void DeleteById(int id)
+        {
+            IAuthorRepository authorRepository = new AuthorRepository();
+            var author = authorRepository.GetByIdInclude(id);
+
+            if (author == null)
+            {
+                throw new Exception("Book not found.");
+            }
+
+          
+            authorRepository.DeleteById(id);
+        }
+
+        public Author GetByIdInclude(int id)
+        {
+       IAuthorRepository authorRepository = new AuthorRepository();   
+            
+            if (authorRepository.GetByIdInclude(id) is null)
+            {
+                throw new EntityNotFoundException("Book is not found");
+            }
+
+            if (id <= 0)
+            {
+                throw new NotValidException("Id is invalid");
+            }
+
+            return authorRepository.GetByIdInclude(id);
         }
 
         public void Update(int id, Author author)

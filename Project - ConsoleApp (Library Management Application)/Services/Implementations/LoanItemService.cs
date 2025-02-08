@@ -86,7 +86,6 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
             data.IsDeleted = true;
             data.UpdatedAt = DateTime.UtcNow.AddHours(4);
 
-            //loanItemRepository.Remove(data);
             loanItemRepository.Commit();
 
         }
@@ -168,6 +167,7 @@ namespace Project___ConsoleApp__Library_Management_Application_.Services.Impleme
             {
                 throw new NotValidException("LoanItems is not contains loanItem");
             }
+
             //data.Loan = loanItem.Loan;
             //data.Book = loanItem.Book;
             //data.UpdatedAt = loanItem.UpdatedAt;

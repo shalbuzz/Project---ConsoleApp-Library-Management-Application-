@@ -17,6 +17,6 @@ namespace Project___ConsoleApp__Library_Management_Application_.Models
 
         public DateTime? ReturnDate { get; set; }
 
-        public List<LoanItem> LoanItems { get; set; }
+        public List<LoanItem> LoanItems { get; set; } = new List<LoanItem>();
     }
 }
